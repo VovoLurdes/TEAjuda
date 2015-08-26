@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TEAjuda</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_minhas_rotinas">MinhasRotinas</string>
+    <string name="title_activity_criar_rotina">CriarRotina</string>
+</resources>

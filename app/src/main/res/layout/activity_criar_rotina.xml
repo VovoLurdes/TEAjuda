@@ -1,0 +1,106 @@
+<LinearLayout xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:textSize="40dp"
+        android:textAlignment="center"
+        android:id="@+id/tituloRotina"
+        android:gravity="center" />
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/card_view3"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:layout_margin="5dp"
+        android:background="#3781ff"
+        card_view:cardCornerRadius="0dp"
+        card_view:cardUseCompatPadding="false"
+        android:backgroundTint="#6bfff1">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imagemTarefa"
+            android:src="@drawable/ic_no_image"
+            />
+
+    </android.support.v7.widget.CardView>
+
+
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/card_view4"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_margin="5dp"
+        card_view:cardCornerRadius="0dp"
+        card_view:cardUseCompatPadding="false">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editText"
+                android:layout_gravity="center_horizontal"
+                android:hint="TAREFA"
+                android:layout_margin="10dp"/>
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:src="@drawable/gravar"
+                android:id="@+id/gravar_criarRotina"
+                android:layout_margin="20dp"
+                android:paddingBottom="10dp"
+                android:layout_gravity="center_horizontal" />
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:orientation="horizontal">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Salvar e Voltar"
+        android:id="@+id/btnSalVol"
+        android:layout_weight="1"
+        android:layout_gravity="center_vertical"
+        android:background="#293a4044"
+        android:layout_marginRight="2dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Salvar e Nova Tar"
+        android:id="@+id/btnSalNov"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:background="#293a4044" />
+
+        </LinearLayout>
+
+
+</LinearLayout>
