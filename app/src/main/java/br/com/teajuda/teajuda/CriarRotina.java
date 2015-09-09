@@ -62,6 +62,8 @@ public class CriarRotina extends ActionBarActivity {
 
             dialog.show();
 
+
+
         }
 
         Button salvarVoltar = (Button) findViewById(R.id.btnSalVol);
