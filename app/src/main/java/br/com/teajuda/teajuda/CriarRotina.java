@@ -21,7 +21,6 @@ public class CriarRotina extends ActionBarActivity {
 
     AudioRecord voice = new AudioRecord();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
