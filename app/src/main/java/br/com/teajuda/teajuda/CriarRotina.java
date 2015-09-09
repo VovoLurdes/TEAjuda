@@ -9,45 +9,61 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import br.com.teajuda.teajuda.Classes.AudioRecord;
+
+
+
 public class CriarRotina extends ActionBarActivity {
+
+    AudioRecord voice = new AudioRecord();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_criar_rotina);
 
-        final TextView tituloRotina = (TextView) findViewById(R.id.tituloRotina);
+//        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+//        mFileName += "/audiorecordtest.3gp";
 
-        final Dialog dialog = new Dialog(this);
-        dialog.setTitle("Criar Rotina");
-        dialog.setContentView(R.layout.dialog_rotina);
-        dialog.setCancelable(false);
+        ImageView gravar = (ImageView) findViewById(R.id.gravar_criarRotina);
 
-        Button criarRotina = (Button) dialog.findViewById(R.id.btnCriar);
-        Button cancelarRotina = (Button) dialog.findViewById(R.id.btnCancelar);
-        final EditText nomeRotina = (EditText) dialog.findViewById(R.id.edtNomeRotina);
+        if(savedInstanceState == null) {
 
-        criarRotina.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                tituloRotina.setText(nomeRotina.getText().toString());
-                dialog.dismiss();
-            }
-        });
+            final TextView tituloRotina = (TextView) findViewById(R.id.tituloRotina);
 
-        cancelarRotina.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                finish();
-            }
-        });
+            final Dialog dialog = new Dialog(this);
+            dialog.setTitle("Criar Rotina");
+            dialog.setContentView(R.layout.dialog_rotina);
+            dialog.setCancelable(false);
 
-        dialog.show();
+            Button criarRotina = (Button) dialog.findViewById(R.id.btnCriar);
+            Button cancelarRotina = (Button) dialog.findViewById(R.id.btnCancelar);
+            final EditText nomeRotina = (EditText) dialog.findViewById(R.id.edtNomeRotina);
 
+            criarRotina.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tituloRotina.setText(nomeRotina.getText().toString());
+                    dialog.dismiss();
+                }
+            });
+
+            cancelarRotina.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    finish();
+                }
+            });
+
+            dialog.show();
+
+        }
 
         Button salvarVoltar = (Button) findViewById(R.id.btnSalVol);
         Button salvarNovo = (Button) findViewById(R.id.btnSalNov);
@@ -55,9 +71,16 @@ public class CriarRotina extends ActionBarActivity {
         salvarVoltar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                voice.stopRecording();
                 finish();
-                Toast.makeText(CriarRotina.this, "Salvo com Sucesso", Toast.LENGTH_SHORT).show();
+            }
+        });
 
+        gravar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                voice.startRecording();
+                Toast.makeText(CriarRotina.this, "Gravando", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -85,5 +108,20 @@ public class CriarRotina extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+ /*   @Override
+    public void onPause() {
+        super.onPause();
+        if ( voice != null) {
+            voice.release();
+            mRecorder = null;
+        }
+
+        if (mPlayer != null) {
+            mPlayer.release();
+            mPlayer = null;
+        }
+
+    }*/
 
 }
