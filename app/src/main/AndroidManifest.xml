@@ -3,6 +3,7 @@
     package="br.com.teajuda.teajuda" >
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -25,6 +26,10 @@
         <activity
             android:name=".CriarRotina"
             android:label="@string/title_activity_criar_rotina" >
+        </activity>
+        <activity
+            android:name=".takepicture"
+            android:label="@string/title_activity_takepicture" >
         </activity>
     </application>
 

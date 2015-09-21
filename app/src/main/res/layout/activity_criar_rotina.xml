@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -14,29 +13,63 @@
         android:id="@+id/tituloRotina"
         android:gravity="center" />
 
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="3"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
+
     <android.support.v7.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/card_view3"
         android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="3"
-        android:layout_margin="5dp"
+        android:layout_height="match_parent"
         android:background="#3781ff"
         card_view:cardCornerRadius="0dp"
         card_view:cardUseCompatPadding="false"
         android:backgroundTint="#6bfff1">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:id="@+id/imagemTarefa"
             android:src="@drawable/ic_no_image"
             />
 
+
     </android.support.v7.widget.CardView>
 
+        <android.support.design.widget.FloatingActionButton
+            android:layout_height="60dp"
+            android:layout_width="60dp"
+            android:elevation="5dp"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:id="@+id/button_slv_img"
+            android:src="@drawable/ic_camera"/>
 
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
+  </LinearLayout>
 
     <android.support.v7.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -57,19 +90,39 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/editText"
+                android:id="@+id/edtTituloTarefa"
                 android:layout_gravity="center_horizontal"
                 android:hint="TAREFA"
                 android:layout_margin="10dp"/>
 
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="50dp"
-                android:src="@drawable/gravar"
-                android:id="@+id/gravar_criarRotina"
-                android:layout_margin="20dp"
-                android:paddingBottom="10dp"
-                android:layout_gravity="center_horizontal" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2" />
+
+                 <android.support.design.widget.FloatingActionButton
+                    android:layout_height="60dp"
+                    android:layout_width="60dp"
+                    android:id="@+id/button_play"
+                    android:src="@drawable/gravar"
+                    android:layout_marginRight="10dp"
+                     android:layout_weight="1"
+                     />
+
+                <android.support.design.widget.FloatingActionButton
+                    android:layout_height="60dp"
+                    android:layout_width="60dp"
+                    android:layout_gravity="center"
+                    android:id="@+id/button_stop"
+                    android:src="@drawable/stop"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

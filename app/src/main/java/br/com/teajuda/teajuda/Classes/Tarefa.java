@@ -3,14 +3,14 @@ package br.com.teajuda.teajuda.Classes;
 /**
  * Created by foo on 26/07/15.
  */
-public class Tarefas {
+public class Tarefa {
 
     private Long id;
     private Long idImagem;
     private Long idRotina;
     private Long idAudio;
     private String titulo;
-    private String ordem;
+    private int ordem;
 
     public Long getId() {
         return id;
@@ -52,11 +52,11 @@ public class Tarefas {
         this.titulo = titulo;
     }
 
-    public String getOrdem() {
+    public int getOrdem() {
         return ordem;
     }
 
-    public void setOrdem(String ordem) {
+    public void setOrdem(int ordem) {
         this.ordem = ordem;
     }
 }

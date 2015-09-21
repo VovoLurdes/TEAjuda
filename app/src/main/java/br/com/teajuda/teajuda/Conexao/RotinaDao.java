@@ -1,5 +1,6 @@
 package br.com.teajuda.teajuda.Conexao;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -11,7 +12,7 @@ import java.util.List;
 import br.com.teajuda.teajuda.Classes.Audio;
 import br.com.teajuda.teajuda.Classes.Imagem;
 import br.com.teajuda.teajuda.Classes.Rotina;
-import br.com.teajuda.teajuda.Classes.Tarefas;
+import br.com.teajuda.teajuda.Classes.Tarefa;
 
 /**
  * Created by foo on 16/08/15.
@@ -75,19 +76,52 @@ public class RotinaDao extends SQLiteOpenHelper {
 
     }
 
- /*   public void insere (Aluno aluno){
+    public void insere_tarefa (Tarefa tarefa){
         ContentValues values = new ContentValues();
 
-        values.put("nome", aluno.getNome());
-        values.put("telefone", aluno.getTelefone());
-        values.put("endereco", aluno.getEndereco());
-        values.put("site", aluno.getSite());
-        values.put("nota", aluno.getNota());
-        values.put("caminhoFoto", aluno.getCaminhoFoto());
+        values.put("titulo", tarefa.getTitulo());
+        values.put("audio", tarefa.getIdAudio());
+        values.put("imagem", tarefa.getIdImagem());
+        values.put("rotina", tarefa.getIdRotina());
+        values.put("ordem", tarefa.getOrdem());
 
-        getWritableDatabase().insert(TABELA, null, values);
+        getWritableDatabase().insert(TABELA_ATIVIDADE, null, values);
     }
-*/
+
+    public long insere_imagem (Imagem imagem){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("caminho", imagem.getCaminho());
+
+        long id = db.insert(TABELA_IMAGEM, null, values);
+
+        return id;
+    }
+
+    public long insere_audio (Audio audio){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("caminho", audio.getCaminho());
+
+        long id = db.insert(TABELA_AUDIO, null, values);
+
+        return id;
+    }
+
+    public long insere_rotina (Rotina rotina){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put("titulo", rotina.getTitulo());
+        values.put("ordem", rotina.getOrdem());
+
+        long id = db.insert(TABELA_ROTINA, null, values);
+
+        return id;
+    }
+
     public List<Rotina> getLista(){
         List<Rotina> rotina = new ArrayList<Rotina>();
 
@@ -121,7 +155,7 @@ public class RotinaDao extends SQLiteOpenHelper {
         getWritableDatabase().delete(TABELA,"id=?",args);
     }
 
-    public void deletar_tarefa(Tarefas tarefa){
+    public void deletar_tarefa(Tarefa tarefa){
         String[] args = {tarefa.getId().toString()};
         getWritableDatabase().delete(TABELA,"id=?",args);
     }

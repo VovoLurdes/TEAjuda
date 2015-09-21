@@ -1,0 +1,19 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="br.com.teajuda.teajuda.takepicture"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/fotobla"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_height="60dp"
+        android:layout_width="60dp"
+        android:elevation="5dp"
+        android:gravity="center"
+        android:id="@+id/botaoflutuante"
+        android:layout_gravity="bottom" />
+</LinearLayout>

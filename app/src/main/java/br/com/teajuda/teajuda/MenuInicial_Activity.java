@@ -2,11 +2,17 @@ package br.com.teajuda.teajuda;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 public class MenuInicial_Activity extends ActionBarActivity {
@@ -14,9 +20,11 @@ public class MenuInicial_Activity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_menu_inicial_);
 
         Button btnMinhasRotinas = (Button) findViewById(R.id.btnMinhasRotinas);
+        Button btnEditarRotina = (Button) findViewById(R.id.btnEditarRotina);
         Button btnCriarRotinas  = (Button) findViewById(R.id.btnCriarRotinas);
 
         btnMinhasRotinas.setOnClickListener(new View.OnClickListener() {
@@ -24,6 +32,14 @@ public class MenuInicial_Activity extends ActionBarActivity {
             public void onClick(View v) {
                 Intent minhasrotinas = new Intent(MenuInicial_Activity.this, MinhasRotinas.class);
                 startActivity(minhasrotinas);
+            }
+        });
+
+        btnEditarRotina.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent editarrotina = new Intent(MenuInicial_Activity.this, takepicture.class);
+                startActivity(editarrotina);
             }
         });
 
@@ -35,9 +51,17 @@ public class MenuInicial_Activity extends ActionBarActivity {
             }
         });
 
-
-
-
+        try {
+        File yourFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "score.txt");
+        if(!yourFile.exists()) {
+            yourFile.createNewFile();
+        }
+        FileOutputStream oFile = new FileOutputStream(yourFile, false);
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+        writeToFile();
 
     }
 
@@ -61,5 +85,13 @@ public class MenuInicial_Activity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void writeToFile() {
+        File folderImage = new File(Environment.getExternalStorageDirectory().toString()+"/TEAjuda/Images");
+        File folderAudio = new File(Environment.getExternalStorageDirectory().toString()+"/TEAjuda/Audios");
+        folderImage.mkdirs();
+        folderAudio.mkdirs();
+
     }
 }

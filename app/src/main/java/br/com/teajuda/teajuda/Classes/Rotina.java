@@ -6,8 +6,8 @@ package br.com.teajuda.teajuda.Classes;
 public class Rotina {
 
     private Long id;
-    private String Titulo;
-    private long Ordem;
+    private String titulo;
+    private int ordem;
 
     public Long getId() {
         return id;
@@ -18,18 +18,18 @@ public class Rotina {
     }
 
     public String getTitulo() {
-        return Titulo;
+        return titulo;
     }
 
     public void setTitulo(String titulo) {
-        Titulo = titulo;
+        this.titulo = titulo;
     }
 
-    public long getOrdem() {
-        return Ordem;
+    public int getOrdem() {
+        return ordem;
     }
 
-    public void setOrdem(long ordem) {
-        Ordem = ordem;
+    public void setOrdem(int ordem) {
+        this.ordem = ordem;
     }
 }

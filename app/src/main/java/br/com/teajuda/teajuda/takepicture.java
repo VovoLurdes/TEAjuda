@@ -1,8 +1,6 @@
 package br.com.teajuda.teajuda;
 
-
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -13,15 +11,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -29,120 +23,38 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import br.com.teajuda.teajuda.Classes.AudioRecord;
-import br.com.teajuda.teajuda.Classes.Imagem;
-import br.com.teajuda.teajuda.Classes.Tarefa;
-import br.com.teajuda.teajuda.Conexao.RotinaDao;
+public class takepicture extends AppCompatActivity {
 
-
-public class CriarRotina extends ActionBarActivity {
-
-    AudioRecord voice = new AudioRecord();
     ImageView viewImage;
-    FloatingActionButton chooseImage;
-    String path;
-    EditText tituloTarefa;
+    FloatingActionButton b;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_criar_rotina);
+        setContentView(R.layout.activity_takepicture);
 
-//        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-//        mFileName += "/audiorecordtest.3gp";
+        b = (FloatingActionButton)findViewById (R.id.botaoflutuante);
+        viewImage = (ImageView) findViewById(R.id.fotobla);
 
-        FloatingActionButton gravar = (FloatingActionButton) findViewById(R.id.button_play);
-        FloatingActionButton stop = (FloatingActionButton) findViewById(R.id.button_stop);
+        b.setOnClickListener(new View.OnClickListener() {
 
-        tituloTarefa = (EditText) findViewById(R.id.edtTituloTarefa);
-
-        final RotinaDao dbRotina = new RotinaDao(this);
-
-        viewImage = (ImageView) findViewById(R.id.imagemTarefa);
-        chooseImage = (FloatingActionButton) findViewById(R.id.button_slv_img);
-
-
-        if(savedInstanceState == null) {
-
-            final TextView tituloRotina = (TextView) findViewById(R.id.tituloRotina);
-
-            final Dialog dialog = new Dialog(this);
-            dialog.setTitle("Criar Rotina");
-            dialog.setContentView(R.layout.dialog_rotina);
-            dialog.setCancelable(false);
-
-            Button criarRotina = (Button) dialog.findViewById(R.id.btnCriar);
-            Button cancelarRotina = (Button) dialog.findViewById(R.id.btnCancelar);
-            final EditText nomeRotina = (EditText) dialog.findViewById(R.id.edtNomeRotina);
-
-            criarRotina.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    tituloRotina.setText(nomeRotina.getText().toString());
-                    dialog.dismiss();
-                }
-            });
-
-            cancelarRotina.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                    finish();
-                }
-            });
-
-            dialog.show();
-        }
-
-        Button salvarVoltar = (Button) findViewById(R.id.btnSalVol);
-        Button salvarNovo = (Button) findViewById(R.id.btnSalNov);
-
-        stop.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                voice.stopRecording();
-                Toast.makeText(CriarRotina.this, "Audio Gravado", Toast.LENGTH_SHORT).show();
-            }
-        });
 
-        gravar.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View v) {
-                voice.startRecording();
-                Toast.makeText(CriarRotina.this, "Gravando", Toast.LENGTH_SHORT).show();
-            }
-        });
 
-        chooseImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 selectImage();
-            }
-        });
-
-        salvarVoltar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Imagem imagem = new Imagem();
-                Tarefa tarefa = new Tarefa();
-
-                imagem.setCaminho(path);
-                long idImagem = dbRotina.insere_imagem(imagem);
-
-                tarefa.setIdImagem(idImagem);
-                tarefa.setTitulo(tituloTarefa.toString());
-
-                dbRotina.insere_tarefa(tarefa);
 
             }
+
         });
 
     }
 
+
     private void selectImage() {
 
         final CharSequence[] options = { "Tirar Foto", "Foto da Galeria","Cancelar" };
-        AlertDialog.Builder builder = new AlertDialog.Builder(CriarRotina.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(takepicture.this);
         builder.setTitle("Adicionar Foto");
 
         builder.setItems(options, new DialogInterface.OnClickListener() {
@@ -190,6 +102,7 @@ public class CriarRotina extends ActionBarActivity {
                         f = temp;
                         break;
                     }
+
                 }
 
                 try {
@@ -197,8 +110,10 @@ public class CriarRotina extends ActionBarActivity {
                     BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
                     bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
                     viewImage.setImageBitmap(bitmap);
-                    path = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                            "/TEAjuda/Imagens/"+ System.currentTimeMillis()+".3gp";
+                    String path = android.os.Environment
+                            .getExternalStorageDirectory()
+                            + File.separator
+                            + "Phoenix" + File.separator + "default";
                     f.delete();
 
                     OutputStream outFile = null;
@@ -216,11 +131,15 @@ public class CriarRotina extends ActionBarActivity {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
                 } catch (Exception e) {
+
                     e.printStackTrace();
+
                 }
 
             } else if (requestCode == 2) {
+
                 Uri selectedImage = data.getData();
                 String[] filePath = { MediaStore.Images.Media.DATA };
                 Cursor c = getContentResolver().query(selectedImage, filePath, null, null, null);
@@ -239,7 +158,7 @@ public class CriarRotina extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_criar_rotina, menu);
+        getMenuInflater().inflate(R.menu.menu_takepicture, menu);
         return true;
     }
 
@@ -257,21 +176,4 @@ public class CriarRotina extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
- /*   @Override
-    public void onPause() {
-        super.onPause();
-        if ( voice != null) {
-            voice.release();
-            mRecorder = null;
-        }
-
-        if (mPlayer != null) {
-            mPlayer.release();
-            mPlayer = null;
-        }
-
-    }*/
-
 }

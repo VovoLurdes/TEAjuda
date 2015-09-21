@@ -8,7 +8,7 @@ import android.widget.RatingBar;
 import br.com.teajuda.teajuda.Classes.Audio;
 import br.com.teajuda.teajuda.Classes.Imagem;
 import br.com.teajuda.teajuda.Classes.Rotina;
-import br.com.teajuda.teajuda.Classes.Tarefas;
+import br.com.teajuda.teajuda.Classes.Tarefa;
 
 /**
  * Created by android5195 on 23/07/15.
@@ -18,7 +18,7 @@ public class FormularioHelper {
     private Rotina  rotina;
     private Imagem  imagem;
     private Audio   audio;
-    private Tarefas tarefas;
+    private Tarefa tarefa;
 
 
     private EditText nome;
