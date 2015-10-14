@@ -30,7 +30,7 @@ public class MenuInicial_Activity extends ActionBarActivity {
         btnMinhasRotinas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent minhasrotinas = new Intent(MenuInicial_Activity.this, MinhasRotinas.class);
+                Intent minhasrotinas = new Intent(MenuInicial_Activity.this, MinhasRotinas_Activity.class);
                 startActivity(minhasrotinas);
             }
         });
@@ -88,7 +88,7 @@ public class MenuInicial_Activity extends ActionBarActivity {
     }
 
     public void writeToFile() {
-        File folderImage = new File(Environment.getExternalStorageDirectory().toString()+"/TEAjuda/Images");
+        File folderImage = new File(Environment.getExternalStorageDirectory().toString()+"/TEAjuda/Imagens");
         File folderAudio = new File(Environment.getExternalStorageDirectory().toString()+"/TEAjuda/Audios");
         folderImage.mkdirs();
         folderAudio.mkdirs();

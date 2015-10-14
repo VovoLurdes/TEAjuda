@@ -12,7 +12,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MenuInicial_Activity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,16 +21,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MinhasRotinas"
-            android:label="@string/title_activity_minhas_rotinas" >
-        </activity>
-        <activity
             android:name=".CriarRotina"
-            android:label="@string/title_activity_criar_rotina" >
+            android:label="@string/title_activity_criar_rotina"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".takepicture"
             android:label="@string/title_activity_takepicture" >
+        </activity>
+        <activity
+            android:name=".MinhasRotinas_Activity"
+            android:label="@string/title_activity_minhas_rotinas_" >
+        </activity>
+        <activity
+            android:name=".Atividades_activity"
+            android:label="@string/title_activity_atividades_activity"
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>
 

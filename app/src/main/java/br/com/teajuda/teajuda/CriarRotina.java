@@ -24,13 +24,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
+import br.com.teajuda.teajuda.Classes.Audio;
 import br.com.teajuda.teajuda.Classes.AudioRecord;
 import br.com.teajuda.teajuda.Classes.Imagem;
+import br.com.teajuda.teajuda.Classes.Rotina;
 import br.com.teajuda.teajuda.Classes.Tarefa;
 import br.com.teajuda.teajuda.Conexao.RotinaDao;
 
@@ -41,19 +39,30 @@ public class CriarRotina extends ActionBarActivity {
     ImageView viewImage;
     FloatingActionButton chooseImage;
     String path;
+    String pathAudio;
     EditText tituloTarefa;
+    TextView tituloRotina;
+
+    long idRotina;
+    long idImagem;
+    long idAudio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_criar_rotina);
 
-//        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+        final int[] contador = {0};
+
+//        mFileName = Environt.getExternalStorageDirectory().getAbsolutePath();
 //        mFileName += "/audiorecordtest.3gp";
 
-        FloatingActionButton gravar = (FloatingActionButton) findViewById(R.id.button_play);
-        FloatingActionButton stop = (FloatingActionButton) findViewById(R.id.button_stop);
+        final FloatingActionButton gravar = (FloatingActionButton) findViewById(R.id.button_play);
+        final FloatingActionButton stop = (FloatingActionButton) findViewById(R.id.button_stop);
 
+        stop.setVisibility(View.INVISIBLE);
+
+        tituloRotina = (TextView) findViewById(R.id.tituloRotina);
         tituloTarefa = (EditText) findViewById(R.id.edtTituloTarefa);
 
         final RotinaDao dbRotina = new RotinaDao(this);
@@ -100,8 +109,10 @@ public class CriarRotina extends ActionBarActivity {
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                voice.stopRecording();
+                 pathAudio = voice.stopRecording();
                 Toast.makeText(CriarRotina.this, "Audio Gravado", Toast.LENGTH_SHORT).show();
+                stop.setVisibility(View.INVISIBLE);
+                gravar.setVisibility(View.VISIBLE);
             }
         });
 
@@ -110,6 +121,8 @@ public class CriarRotina extends ActionBarActivity {
             public void onClick(View v) {
                 voice.startRecording();
                 Toast.makeText(CriarRotina.this, "Gravando", Toast.LENGTH_SHORT).show();
+                stop.setVisibility(View.VISIBLE);
+                gravar.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -124,16 +137,79 @@ public class CriarRotina extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Imagem imagem = new Imagem();
+                Audio audio = new Audio();
                 Tarefa tarefa = new Tarefa();
+                Rotina rotina = new Rotina();
 
-                imagem.setCaminho(path);
-                long idImagem = dbRotina.insere_imagem(imagem);
+                if (path != null) {
+                    imagem.setCaminho(path);
+                    idImagem = dbRotina.insere_imagem(imagem);
+                }
+
+                if (pathAudio != null) {
+                    audio.setCaminho(pathAudio);
+                    idAudio = dbRotina.insere_audio(audio);
+                }
+
+                if(contador[0] == 0) {
+                    rotina.setTitulo(tituloRotina.getText().toString());
+                    rotina.setOrdem(1);
+                    idRotina = dbRotina.insere_rotina(rotina);
+                    contador[0] = 1;
+                }
 
                 tarefa.setIdImagem(idImagem);
-                tarefa.setTitulo(tituloTarefa.toString());
+                tarefa.setIdAudio(idAudio);
+                tarefa.setIdRotina(idRotina);
+                tarefa.setOrdem(1);
+                tarefa.setTitulo(tituloTarefa.getText().toString());
 
                 dbRotina.insere_tarefa(tarefa);
 
+                dbRotina.close();
+
+                finish();
+            }
+        });
+
+        salvarNovo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Imagem imagem = new Imagem();
+                Audio audio = new Audio();
+                Tarefa tarefa = new Tarefa();
+                Rotina rotina = new Rotina();
+
+
+                if (path != null) {
+                    imagem.setCaminho(path);
+                    idImagem = dbRotina.insere_imagem(imagem);
+                }
+
+                if (pathAudio != null) {
+                    audio.setCaminho(pathAudio);
+                    idAudio = dbRotina.insere_audio(audio);
+                }
+
+                if(contador[0] == 0) {
+                    rotina.setTitulo(tituloRotina.getText().toString());
+                    rotina.setOrdem(1);
+                    idRotina = dbRotina.insere_rotina(rotina);
+                    contador[0] = 1;
+                }
+
+                tarefa.setIdImagem(idImagem);
+                tarefa.setIdAudio(idAudio);
+                tarefa.setIdRotina(idRotina);
+                tarefa.setOrdem(1);
+                tarefa.setTitulo(tituloTarefa.getText().toString());
+
+                dbRotina.insere_tarefa(tarefa);
+
+                dbRotina.close();
+
+                tituloTarefa.setText("");
+                viewImage.setImageResource(R.drawable.ic_no_image);
             }
         });
 
@@ -153,10 +229,12 @@ public class CriarRotina extends ActionBarActivity {
 
                 if (options[item].equals("Tirar Foto"))
                 {
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File f = new File(android.os.Environment.getExternalStorageDirectory(), "temp.jpg");
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-                    startActivityForResult(intent, 1);
+                    path = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                            "/TEAjuda/Imagens/"+ System.currentTimeMillis()+".jpg";
+                    Intent irParaCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    Uri localFoto = Uri.fromFile(new File(path));
+                    irParaCamera.putExtra(MediaStore.EXTRA_OUTPUT, localFoto);
+                    startActivityForResult(irParaCamera, 1);
                 }
                 else if (options[item].equals("Foto da Galeria"))
                 {
@@ -177,48 +255,19 @@ public class CriarRotina extends ActionBarActivity {
     }
 
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
-                File f = new File(Environment.getExternalStorageDirectory().toString());
-                for (File temp : f.listFiles()) {
-                    if (temp.getName().equals("temp.jpg")) {
-                        f = temp;
-                        break;
-                    }
-                }
 
-                try {
-                    Bitmap bitmap;
-                    BitmapFactory.Options bitmapOptions = new BitmapFactory.Options();
-                    bitmap = BitmapFactory.decodeFile(f.getAbsolutePath(), bitmapOptions);
-                    viewImage.setImageBitmap(bitmap);
-                    path = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                            "/TEAjuda/Imagens/"+ System.currentTimeMillis()+".3gp";
-                    f.delete();
+                Bitmap imagemFoto = BitmapFactory.decodeFile(path);
+                Bitmap imagemFotoReduzida = Bitmap.createScaledBitmap(imagemFoto, imagemFoto.getWidth(), 300, true);
 
-                    OutputStream outFile = null;
-
-                    File file = new File(path, String.valueOf(System.currentTimeMillis()) + ".jpg");
-                    try {
-                        outFile = new FileOutputStream(file);
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outFile);
-                        outFile.flush();
-                        outFile.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                viewImage.setImageBitmap(imagemFotoReduzida);
+                viewImage.setTag(path);
+                viewImage.setScaleType(ImageView.ScaleType.FIT_XY);
 
             } else if (requestCode == 2) {
                 Uri selectedImage = data.getData();
@@ -226,9 +275,9 @@ public class CriarRotina extends ActionBarActivity {
                 Cursor c = getContentResolver().query(selectedImage, filePath, null, null, null);
                 c.moveToFirst();
                 int columnIndex = c.getColumnIndex(filePath[0]);
-                String picturePath = c.getString(columnIndex);
+                path = c.getString(columnIndex);
                 c.close();
-                Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
+                Bitmap thumbnail = (BitmapFactory.decodeFile(path));
                 viewImage.setImageBitmap(thumbnail);
             }
 

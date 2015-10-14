@@ -72,10 +72,11 @@ public class AudioRecord extends Activity {
         mRecorder.start();
     }
 
-    public void stopRecording() {
+    public String stopRecording() {
         mRecorder.stop();
         mRecorder.release();
         mRecorder = null;
+        return mFileName;
     }
 
     class RecordButton extends Button {

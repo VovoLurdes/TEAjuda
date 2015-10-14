@@ -1,9 +1,11 @@
 package br.com.teajuda.teajuda.Classes;
 
+import java.io.Serializable;
+
 /**
  * Created by foo on 26/07/15.
  */
-public class Rotina {
+public class Rotina implements Serializable {
 
     private Long id;
     private String titulo;

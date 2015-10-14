@@ -6,4 +6,8 @@
     <string name="title_activity_minhas_rotinas">MinhasRotinas</string>
     <string name="title_activity_criar_rotina">CriarRotina</string>
     <string name="title_activity_takepicture">takepicture</string>
+    <string name="title_activity_minhas_rotinas_">MinhasRotinas_Activity</string>
+    <string name="title_activity_atividades_">Atividades_Activity</string>
+    <string name="title_activity_atividades_activity">Atividades_activity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>
