@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by foo on 30/08/15.
@@ -124,8 +126,10 @@ public class AudioRecord extends Activity {
     }
 
     public AudioRecord() {
+        Date date = new Date();
+        SimpleDateFormat dataFormato = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/TEAjuda/Audios/"+ System.currentTimeMillis()+".3gp";
+        mFileName += "/TEAjuda/Audios/"+ dataFormato.format(date) +".3gp";
     }
 
 

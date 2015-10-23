@@ -21,22 +21,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CriarRotina"
-            android:label="@string/title_activity_criar_rotina"
+            android:name=".CriarRotina_Activity"
+            android:label="Criação de Rotinas"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".takepicture"
-            android:label="@string/title_activity_takepicture" >
-        </activity>
-        <activity
             android:name=".MinhasRotinas_Activity"
-            android:label="@string/title_activity_minhas_rotinas_" >
+            android:label="Lista de Rotinas"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name=".Atividades_activity"
-            android:label="@string/title_activity_atividades_activity"
+            android:label="Tarefas"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".ListaEditarRotina_Activity"
+            android:label="Editar Rotina"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".ListaEditarTarefa_Activity"
+            android:label="Editar Tarefas"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".EditarTarefa_Activity"
+            android:label="Tarefa"
+            android:screenOrientation="portrait"  >
         </activity>
     </application>
 

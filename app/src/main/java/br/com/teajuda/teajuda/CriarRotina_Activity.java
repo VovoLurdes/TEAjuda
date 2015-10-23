@@ -33,9 +33,9 @@ import br.com.teajuda.teajuda.Classes.Tarefa;
 import br.com.teajuda.teajuda.Conexao.RotinaDao;
 
 
-public class CriarRotina extends ActionBarActivity {
+public class CriarRotina_Activity extends ActionBarActivity {
 
-    AudioRecord voice = new AudioRecord();
+    AudioRecord voice;
     ImageView viewImage;
     FloatingActionButton chooseImage;
     String path;
@@ -106,11 +106,14 @@ public class CriarRotina extends ActionBarActivity {
         Button salvarVoltar = (Button) findViewById(R.id.btnSalVol);
         Button salvarNovo = (Button) findViewById(R.id.btnSalNov);
 
+
+
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 pathAudio = voice.stopRecording();
-                Toast.makeText(CriarRotina.this, "Audio Gravado", Toast.LENGTH_SHORT).show();
+
+                pathAudio = voice.stopRecording();
+                Toast.makeText(CriarRotina_Activity.this, "Audio Gravado", Toast.LENGTH_SHORT).show();
                 stop.setVisibility(View.INVISIBLE);
                 gravar.setVisibility(View.VISIBLE);
             }
@@ -119,8 +122,9 @@ public class CriarRotina extends ActionBarActivity {
         gravar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                voice = new AudioRecord();
                 voice.startRecording();
-                Toast.makeText(CriarRotina.this, "Gravando", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CriarRotina_Activity.this, "Gravando", Toast.LENGTH_SHORT).show();
                 stop.setVisibility(View.VISIBLE);
                 gravar.setVisibility(View.INVISIBLE);
             }
@@ -144,11 +148,13 @@ public class CriarRotina extends ActionBarActivity {
                 if (path != null) {
                     imagem.setCaminho(path);
                     idImagem = dbRotina.insere_imagem(imagem);
+                    path = null;
                 }
 
                 if (pathAudio != null) {
                     audio.setCaminho(pathAudio);
                     idAudio = dbRotina.insere_audio(audio);
+                    pathAudio = null;
                 }
 
                 if(contador[0] == 0) {
@@ -184,11 +190,13 @@ public class CriarRotina extends ActionBarActivity {
                 if (path != null) {
                     imagem.setCaminho(path);
                     idImagem = dbRotina.insere_imagem(imagem);
+                    path = null;
                 }
 
                 if (pathAudio != null) {
                     audio.setCaminho(pathAudio);
                     idAudio = dbRotina.insere_audio(audio);
+                    pathAudio = null;
                 }
 
                 if(contador[0] == 0) {
@@ -206,8 +214,9 @@ public class CriarRotina extends ActionBarActivity {
 
                 dbRotina.insere_tarefa(tarefa);
 
-                dbRotina.close();
 
+
+                dbRotina.close();
                 tituloTarefa.setText("");
                 viewImage.setImageResource(R.drawable.ic_no_image);
             }
@@ -218,7 +227,7 @@ public class CriarRotina extends ActionBarActivity {
     private void selectImage() {
 
         final CharSequence[] options = { "Tirar Foto", "Foto da Galeria","Cancelar" };
-        AlertDialog.Builder builder = new AlertDialog.Builder(CriarRotina.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(CriarRotina_Activity.this);
         builder.setTitle("Adicionar Foto");
 
         builder.setItems(options, new DialogInterface.OnClickListener() {

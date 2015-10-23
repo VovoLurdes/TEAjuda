@@ -25,7 +25,7 @@ public class MinhasRotinas_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_minhas_rotinas);
 
-        listaRotina = (ListView) findViewById(R.id.lista_alunos);
+        listaRotina = (ListView) findViewById(R.id.lista_rotina);
 
         carregaLista();
 

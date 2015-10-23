@@ -11,32 +11,32 @@ import java.util.List;
 import br.com.teajuda.teajuda.R;
 
 /**
- * Created by foo on 04/10/15.
+ * Created by foo on 19/10/15.
  */
-public class ListaRotinaAdapter extends BaseAdapter{
+public class ListaTarefaAdapter extends BaseAdapter {
 
-    private final List<Rotina> rotinas;
+    private final List<Tarefa> tarefas;
     private final Activity activity;
 
-    public ListaRotinaAdapter (Activity activity, List<Rotina> rotinas){
+    public ListaTarefaAdapter (Activity activity, List<Tarefa> tarefas){
         this.activity = activity;
-        this.rotinas = rotinas;
+        this.tarefas = tarefas;
     }
 
 
     @Override
     public int getCount() {
-        return this.rotinas.size();
+        return this.tarefas.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return this.rotinas.get(position);
+        return this.tarefas.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return this.rotinas.get(position).getId();
+        return this.tarefas.get(position).getId();
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ListaRotinaAdapter extends BaseAdapter{
         View view = activity.getLayoutInflater().inflate(R.layout.item, parent, false);
 
         TextView nome = (TextView) view.findViewById(R.id.item_nome);
-        nome.setText(rotinas.get(position).getTitulo());
+        nome.setText(tarefas.get(position).getTitulo());
 
         return view;
     }

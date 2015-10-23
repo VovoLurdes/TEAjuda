@@ -21,10 +21,11 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:id="@+id/txtAtividade"
         android:hint="TAREFA"
-        android:textSize="20dp"/>
+        android:textSize="25dp"
+        android:gravity="center"/>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -34,4 +35,15 @@
         android:layout_margin="10dp"
         android:id="@+id/imgAudioAtividade"/>
 
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:layout_marginTop="20dp"
+        android:text="FINALIZAR ROTINA"
+        android:textSize="20dp"
+        android:layout_gravity="right"
+        android:visibility="visible"
+        android:id="@+id/finalizarRotina" />
 </LinearLayout>

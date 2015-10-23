@@ -38,7 +38,7 @@ public class MenuInicial_Activity extends ActionBarActivity {
         btnEditarRotina.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent editarrotina = new Intent(MenuInicial_Activity.this, takepicture.class);
+                Intent editarrotina = new Intent(MenuInicial_Activity.this, ListaEditarRotina_Activity.class);
                 startActivity(editarrotina);
             }
         });
@@ -46,7 +46,7 @@ public class MenuInicial_Activity extends ActionBarActivity {
         btnCriarRotinas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent criarrotinas = new Intent(MenuInicial_Activity.this, CriarRotina.class);
+                Intent criarrotinas = new Intent(MenuInicial_Activity.this, CriarRotina_Activity.class);
                 startActivity(criarrotinas);
             }
         });

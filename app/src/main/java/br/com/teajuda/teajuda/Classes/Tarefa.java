@@ -1,9 +1,11 @@
 package br.com.teajuda.teajuda.Classes;
 
+import java.io.Serializable;
+
 /**
  * Created by foo on 26/07/15.
  */
-public class Tarefa {
+public class Tarefa implements Serializable {
 
     private Long id;
     private Long idImagem;

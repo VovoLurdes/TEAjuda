@@ -30,20 +30,20 @@ public class RotinaDao extends SQLiteOpenHelper {
     private static final String TABELA_ROTINA =
             "CREATE TABLE " + TB_ROTINA + " (" +
                     "idRotina INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "Descricao TEXT NOT NULL," +
-                    "Ordem INTEGER NOT NULL" +
+                    "DescricaoRotina TEXT NOT NULL," +
+                    "OrdemRotina INTEGER NOT NULL" +
                     ");";
 
     private static final String TABELA_IMAGEM =
             "CREATE TABLE " + TB_IMAGEM + " (" +
                     "idImagem INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "Caminho TEXT" +
+                    "CaminhoImagem TEXT" +
                     ");";
 
     private static final String TABELA_AUDIO =
             "CREATE TABLE " + TB_AUDIO + " (" +
                     "idAudio INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "Caminho TEXT" +
+                    "CaminhoAudio TEXT" +
                     ");";
 
     private static final String TABELA_ATIVIDADE =
@@ -52,8 +52,8 @@ public class RotinaDao extends SQLiteOpenHelper {
                     "idImagem INTEGER," +
                     "idRotina INTEGER NOT NULL," +
                     "idAudio INTEGER," +
-                    "Descricao TEXT NOT NULL," +
-                    "Ordem INTEGER NOT NULL," +
+                    "DescricaoAtividade TEXT NOT NULL," +
+                    "OrdemTarefa INTEGER NOT NULL," +
                     "FOREIGN KEY(idAudio) REFERENCES Audio(idAudio)," +
                     "FOREIGN KEY(idImagem) REFERENCES Imagem(idImagem)," +
                     "FOREIGN KEY(idRotina) REFERENCES Rotina(idRotina)" +
@@ -61,7 +61,7 @@ public class RotinaDao extends SQLiteOpenHelper {
 
 
     public RotinaDao (Context context){
-        super(context, DATABASE,null, VERSAO);
+        super(context, DATABASE, null, VERSAO);
     }
 
     @Override
@@ -83,8 +83,8 @@ public class RotinaDao extends SQLiteOpenHelper {
         values.put("idImagem",tarefa.getIdImagem());
         values.put("idRotina",tarefa.getIdRotina());
         values.put("idAudio", tarefa.getIdAudio());
-        values.put("Descricao", tarefa.getTitulo());
-        values.put("Ordem", tarefa.getOrdem());
+        values.put("DescricaoAtividade", tarefa.getTitulo());
+        values.put("OrdemTarefa", tarefa.getOrdem());
 
         getWritableDatabase().insert(TB_TAREFA, null, values);
     }
@@ -93,7 +93,7 @@ public class RotinaDao extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put("Caminho", imagem.getCaminho());
+        values.put("CaminhoImagem", imagem.getCaminho());
 
         long id = db.insert(TB_IMAGEM, null, values);
 
@@ -104,9 +104,9 @@ public class RotinaDao extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put("Caminho", audio.getCaminho());
+        values.put("CaminhoAudio", audio.getCaminho());
 
-        long id = db.insert(TB_IMAGEM, null, values);
+        long id = db.insert(TB_AUDIO, null, values);
 
         return id;
     }
@@ -115,8 +115,8 @@ public class RotinaDao extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        values.put("Descricao", rotina.getTitulo());
-        values.put("Ordem", rotina.getOrdem());
+        values.put("DescricaoRotina", rotina.getTitulo());
+        values.put("OrdemRotina", rotina.getOrdem());
 
         long id = db.insert(TB_ROTINA, null, values);
 
@@ -132,8 +132,8 @@ public class RotinaDao extends SQLiteOpenHelper {
             Rotina rotina = new Rotina();
 
             rotina.setId(c.getLong(c.getColumnIndex("idRotina")));
-            rotina.setTitulo(c.getString(c.getColumnIndex("Descricao")));
-            rotina.setOrdem(c.getInt(c.getColumnIndex("Ordem")));
+            rotina.setTitulo(c.getString(c.getColumnIndex("DescricaoRotina")));
+            rotina.setOrdem(c.getInt(c.getColumnIndex("OrdemRotina")));
             rotinas.add(rotina);
         }
 
@@ -161,10 +161,11 @@ public class RotinaDao extends SQLiteOpenHelper {
         while (c.moveToNext()){
             Tarefa tarefa = new Tarefa();
 
+            tarefa.setId(c.getLong(c.getColumnIndex("idTarefa")));
             tarefa.setIdImagem(c.getLong(c.getColumnIndex("idImagem")));
             tarefa.setIdRotina(c.getLong(c.getColumnIndex("idRotina")));
             tarefa.setIdAudio(c.getLong(c.getColumnIndex("idAudio")));
-            tarefa.setTitulo(c.getString(c.getColumnIndex("Descricao")));
+            tarefa.setTitulo(c.getString(c.getColumnIndex("DescricaoAtividade")));
             tarefas.add(tarefa);
         }
 
@@ -175,34 +176,33 @@ public class RotinaDao extends SQLiteOpenHelper {
     public List<Imagem> getImage(Long id){
         List<Imagem> imagens = new ArrayList<Imagem>();
 
-        String sql = "SELECT * FROM " + TB_IMAGEM + "WHERE idImagem = " + id;
+        String sql = "SELECT * FROM " + TB_IMAGEM + " WHERE idImagem = " + id + ";";
 
         Cursor c = getReadableDatabase().rawQuery(sql, null);
 
-        while (c.moveToNext()){
+        while (c.moveToNext()) {
             Imagem imagem = new Imagem();
 
             imagem.setId(c.getLong(c.getColumnIndex("idImagem")));
-            imagem.setCaminho(c.getString(c.getColumnIndex("Caminho")));
+            imagem.setCaminho(c.getString(c.getColumnIndex("CaminhoImagem")));
             imagens.add(imagem);
         }
-
         c.close();
         return imagens;
     }
 
+
     public List<Audio> getAudio(Long id){
         List<Audio> audios = new ArrayList<Audio>();
 
-        String sql = "SELECT * FROM " + TB_AUDIO + "WHERE idAudio = " + id;
+        String sql = "SELECT * FROM " + TB_AUDIO + " WHERE idAudio = " + id;
 
         Cursor c = getReadableDatabase().rawQuery(sql, null);
 
-        while (c.moveToNext()){
+        while (c.moveToNext()) {
             Audio audio = new Audio();
-
-            audio.setId(c.getLong(c.getColumnIndex("idImagem")));
-            audio.setCaminho(c.getString(c.getColumnIndex("Caminho")));
+            audio.setId(c.getLong(c.getColumnIndex("idAudio")));
+            audio.setCaminho(c.getString(c.getColumnIndex("CaminhoAudio")));
             audios.add(audio);
         }
 
@@ -210,46 +210,74 @@ public class RotinaDao extends SQLiteOpenHelper {
         return audios;
     }
 
+    public Tarefa getTarefa(Long id){
+        Tarefa tarefa = new Tarefa();
+
+        String sql = "SELECT * FROM " + TB_TAREFA + " WHERE idTarefa = " + id + ";";
+
+        Cursor c = getReadableDatabase().rawQuery(sql, null);
+
+        tarefa.setId(c.getLong(c.getColumnIndex("idTarefa")));
+        tarefa.setIdImagem(c.getLong(c.getColumnIndex("idImagem")));
+        tarefa.setIdRotina(c.getLong(c.getColumnIndex("idRotina")));
+        tarefa.setIdAudio(c.getLong(c.getColumnIndex("idAudio")));
+        tarefa.setTitulo(c.getString(c.getColumnIndex("DescricaoAtividade")));
+
+        c.close();
+
+        return tarefa;
+    }
+
     public void deletar_rotina(Rotina rotina){
         String[] args = {rotina.getId().toString()};
-        getWritableDatabase().delete(TB_ROTINA, "id=?", args);
+        getWritableDatabase().delete(TB_ROTINA, "idRotina=?", args);
     }
 
     public void deletar_imagem(Imagem imagem){
         String[] args = {imagem.getId().toString()};
-        getWritableDatabase().delete(TB_IMAGEM,"id=?",args);
+        getWritableDatabase().delete(TB_IMAGEM,"idImagem=?",args);
     }
 
     public void deletar_audio(Audio audio){
         String[] args = {audio.getId().toString()};
-        getWritableDatabase().delete(TB_AUDIO,"id=?",args);
+        getWritableDatabase().delete(TB_AUDIO,"idAudio=?",args);
     }
 
     public void deletar_tarefa(Tarefa tarefa){
         String[] args = {tarefa.getId().toString()};
-        getWritableDatabase().delete(TB_TAREFA,"id=?",args);
+        getWritableDatabase().delete(TB_TAREFA,"idTarefa=?",args);
     }
 
-  /*  public void altera (Aluno aluno){
+
+    
+    public void alteraTarefa (Tarefa tarefa){
         ContentValues values = new ContentValues();
-        values.put("nome", aluno.getNome());
-        values.put("telefone", aluno.getTelefone());
-        values.put("endereco", aluno.getEndereco());
-        values.put("site", aluno.getSite());
-        values.put("nota", aluno.getNota());
-        values.put("caminhoFoto", aluno.getCaminhoFoto());
+        values.put("DescricaoAtividade", tarefa.getTitulo());
 
-        String[] idParaSerAlterado = {aluno.getId().toString()};
-        getWritableDatabase().update(TABELA, values, "id=?", idParaSerAlterado);
+        String[] idParaSerAlterado = {tarefa.getId().toString()};
+
+        getWritableDatabase().update(TB_TAREFA, values, "idTarefa=?", idParaSerAlterado);
 
     }
 
-    public void insereOuAtualiza(Aluno aluno){
-        if (aluno.getId() == null){
-            insere(aluno);
-        } else {
-            altera(aluno);
-        }
-    }*/
+    public void alteraImagem (Imagem imagem){
+        ContentValues values = new ContentValues();
+        values.put("CaminhoImagem", imagem.getCaminho());
+
+        String[] idParaSerAlterado = {imagem.getId().toString()};
+
+        getWritableDatabase().update(TB_IMAGEM, values, "idImagem=?", idParaSerAlterado);
+
+    }
+
+    public void alteraAudio (Audio audio){
+        ContentValues values = new ContentValues();
+        values.put("CaminhoAudio", audio.getCaminho());
+
+        String[] idParaSerAlterado = {audio.getId().toString()};
+
+        getWritableDatabase().update(TB_AUDIO, values, "idAudio=?", idParaSerAlterado);
+
+    }
 
 }
