@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.util.List;
 
 import br.com.teajuda.teajuda.Classes.Audio;
 import br.com.teajuda.teajuda.Classes.AudioRecord;
@@ -39,8 +39,11 @@ public class EditarTarefa_Activity extends ActionBarActivity{
     String pathAudio;
     EditText tituloTarefa;
     TextView tituloRotina;
-    List<Imagem> imagem;
-    List<Audio> audio;
+    Imagem imagem;
+    Audio audio;
+
+    long idImagem = -1;
+    long idAudio = -1;
 
 
     @Override
@@ -57,6 +60,7 @@ public class EditarTarefa_Activity extends ActionBarActivity{
 
         Intent edicao = this.getIntent();
         tarefa = (Tarefa) edicao.getSerializableExtra("tarefaselecionada");
+
 
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,16 +82,23 @@ public class EditarTarefa_Activity extends ActionBarActivity{
                 gravar.setVisibility(View.INVISIBLE);
             }
         });
+
         RotinaDao dbRotina = new RotinaDao(this);
-         imagem = dbRotina.getImage(tarefa.getIdImagem());
-         audio = dbRotina.getAudio(tarefa.getIdAudio());
 
-        Bitmap imagemFoto = BitmapFactory.decodeFile(imagem.get(0).getCaminho());
-        Bitmap imagemFotoReduzida = Bitmap.createScaledBitmap(imagemFoto, imagemFoto.getWidth(), 200, true);
+        tarefa = dbRotina.getTarefa(tarefa.getId());
 
-        viewImage.setImageBitmap(imagemFotoReduzida);
-        viewImage.setTag(imagem.get(0).getCaminho());
-        viewImage.setScaleType(ImageView.ScaleType.FIT_XY);
+        imagem = dbRotina.getImage(tarefa.getIdImagem());
+        audio = dbRotina.getAudio(tarefa.getIdAudio());
+
+        if (imagem.getCaminho() != null) {
+            Bitmap imagemFoto = BitmapFactory.decodeFile(imagem.getCaminho());
+            Bitmap imagemFotoReduzida = Bitmap.createScaledBitmap(imagemFoto, imagemFoto.getWidth(), 300, true);
+
+            viewImage.setImageBitmap(imagemFotoReduzida);
+            viewImage.setTag(imagem.getCaminho());
+            viewImage.setScaleType(ImageView.ScaleType.FIT_XY);
+
+        }
 
         tituloTarefa.setText(tarefa.getTitulo());
         dbRotina.close();
@@ -98,7 +109,44 @@ public class EditarTarefa_Activity extends ActionBarActivity{
             }
         });
 
+    }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("Maroto", "Form onResume");
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i("Maroto","Form onStart");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("Maroto","Form onDestroy");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("Maroto","Form onStop");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i("Maroto","Form onPause");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i("Maroto","Form onRestart");
     }
 
     private void selectImage() {
@@ -182,28 +230,30 @@ public class EditarTarefa_Activity extends ActionBarActivity{
 
                 RotinaDao dbRotina = new RotinaDao(this);
 
-                Imagem imagem = new Imagem();
-                Audio audio = new Audio();
-                Tarefa tarefa = new Tarefa();
-
-                imagem = this.imagem.get(0);
-                audio = this.audio.get(0);
-                tarefa = this.tarefa;
-
                 if (path != null) {
                     imagem.setCaminho(path);
-                    dbRotina.alteraImagem(imagem);
+                    if (tarefa.getIdImagem() != 0) {
+                            dbRotina.alteraImagem(imagem);
+                        }else {
+                          idImagem = dbRotina.insere_imagem(imagem);
+                          tarefa.setIdImagem(idImagem);
+                    }
+
                     path = null;
                 }
 
                 if (pathAudio != null) {
                     audio.setCaminho(pathAudio);
-                    dbRotina.alteraAudio(audio);
+                    if (tarefa.getIdAudio() != 0) {
+                        dbRotina.alteraAudio(audio);
+                    }else{
+                        idAudio = dbRotina.insere_audio(audio);
+                        tarefa.setIdAudio(idAudio);
+                    }
                     pathAudio = null;
                 }
 
                 tarefa.setTitulo(tituloTarefa.getText().toString());
-
 
                 dbRotina.alteraTarefa(tarefa);
 

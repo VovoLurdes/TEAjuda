@@ -173,41 +173,39 @@ public class RotinaDao extends SQLiteOpenHelper {
         return tarefas;
     }
 
-    public List<Imagem> getImage(Long id){
-        List<Imagem> imagens = new ArrayList<Imagem>();
+
+    public Imagem getImage(Long id){
+        Imagem imagem = new Imagem();
 
         String sql = "SELECT * FROM " + TB_IMAGEM + " WHERE idImagem = " + id + ";";
 
         Cursor c = getReadableDatabase().rawQuery(sql, null);
 
         while (c.moveToNext()) {
-            Imagem imagem = new Imagem();
-
             imagem.setId(c.getLong(c.getColumnIndex("idImagem")));
             imagem.setCaminho(c.getString(c.getColumnIndex("CaminhoImagem")));
-            imagens.add(imagem);
+
         }
+
         c.close();
-        return imagens;
+        return imagem;
     }
 
 
-    public List<Audio> getAudio(Long id){
-        List<Audio> audios = new ArrayList<Audio>();
+    public Audio getAudio(Long id){
+        Audio audio = new Audio();
 
         String sql = "SELECT * FROM " + TB_AUDIO + " WHERE idAudio = " + id;
 
         Cursor c = getReadableDatabase().rawQuery(sql, null);
 
         while (c.moveToNext()) {
-            Audio audio = new Audio();
             audio.setId(c.getLong(c.getColumnIndex("idAudio")));
             audio.setCaminho(c.getString(c.getColumnIndex("CaminhoAudio")));
-            audios.add(audio);
         }
 
         c.close();
-        return audios;
+        return audio;
     }
 
     public Tarefa getTarefa(Long id){
@@ -216,12 +214,13 @@ public class RotinaDao extends SQLiteOpenHelper {
         String sql = "SELECT * FROM " + TB_TAREFA + " WHERE idTarefa = " + id + ";";
 
         Cursor c = getReadableDatabase().rawQuery(sql, null);
-
-        tarefa.setId(c.getLong(c.getColumnIndex("idTarefa")));
-        tarefa.setIdImagem(c.getLong(c.getColumnIndex("idImagem")));
-        tarefa.setIdRotina(c.getLong(c.getColumnIndex("idRotina")));
-        tarefa.setIdAudio(c.getLong(c.getColumnIndex("idAudio")));
-        tarefa.setTitulo(c.getString(c.getColumnIndex("DescricaoAtividade")));
+        while (c.moveToNext()) {
+            tarefa.setId(c.getLong(c.getColumnIndex("idTarefa")));
+            tarefa.setIdImagem(c.getLong(c.getColumnIndex("idImagem")));
+            tarefa.setIdRotina(c.getLong(c.getColumnIndex("idRotina")));
+            tarefa.setIdAudio(c.getLong(c.getColumnIndex("idAudio")));
+            tarefa.setTitulo(c.getString(c.getColumnIndex("DescricaoAtividade")));
+        }
 
         c.close();
 
@@ -252,6 +251,9 @@ public class RotinaDao extends SQLiteOpenHelper {
     
     public void alteraTarefa (Tarefa tarefa){
         ContentValues values = new ContentValues();
+
+        values.put("idImagem", tarefa.getIdImagem());
+        values.put("idAudio", tarefa.getIdAudio());
         values.put("DescricaoAtividade", tarefa.getTitulo());
 
         String[] idParaSerAlterado = {tarefa.getId().toString()};

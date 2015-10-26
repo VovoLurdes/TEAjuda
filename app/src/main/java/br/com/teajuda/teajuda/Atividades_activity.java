@@ -105,17 +105,7 @@ public class Atividades_activity extends ActionBarActivity {
         @Override
         public Fragment getItem(int position) {
 
-            rotinaDao = new RotinaDao(Atividades_activity.this);
-
-
-            if (position < tarefas.size()) {
-                imagem = rotinaDao.getImage(tarefas.get(position).getIdImagem());
-                audio = rotinaDao.getAudio(tarefas.get(position).getIdAudio());
-            }
-
-            rotinaDao.close();
-
-            return PlaceholderFragment.getNewInstance(tarefas.get(position),imagem,audio, Atividades_activity.this);
+            return PlaceholderFragment.getNewInstance(tarefas.get(position), Atividades_activity.this);
         }
 
         @Override
@@ -134,14 +124,14 @@ public class Atividades_activity extends ActionBarActivity {
     public static final class PlaceholderFragment extends Fragment {
 
         private Tarefa tarefa;
-        private List<Imagem> imagem;
-        private List<Audio> audio;
+        private Imagem imagem = null;
+        private Audio audio;
         private Context context;
 
 
-        public static PlaceholderFragment getNewInstance(Tarefa tarefa, List<Imagem> imagem, List<Audio> audio, Context context) {
+        public static PlaceholderFragment getNewInstance(Tarefa tarefa, Context context) {
             PlaceholderFragment instance = new PlaceholderFragment();
-            instance.newInstance(tarefa, imagem, audio, context);
+            instance.newInstance(tarefa, context);
 
             return instance;
         }
@@ -149,10 +139,8 @@ public class Atividades_activity extends ActionBarActivity {
         public PlaceholderFragment() {
         }
 
-        private PlaceholderFragment newInstance(Tarefa tarefa, List<Imagem> imagem, List<Audio> audio, Context context) {
+        private PlaceholderFragment newInstance(Tarefa tarefa, Context context) {
             this.tarefa = tarefa;
-            this.imagem = imagem;
-            this.audio = audio;
             this.context = context;
 
             return this;
@@ -167,25 +155,34 @@ public class Atividades_activity extends ActionBarActivity {
             ImageView imgAudioAtividade = (ImageView) rootView.findViewById(R.id.imgAudioAtividade);
             TextView  txtAtividade = (TextView) rootView.findViewById(R.id.txtAtividade);
 
+            RotinaDao dao = new RotinaDao(context);
 
+            imagem = dao.getImage(tarefa.getIdImagem());
+            audio = dao.getAudio(tarefa.getIdAudio());
 
-                txtAtividade.setText(tarefa.getTitulo());
+            dao.close();
 
-                Bitmap imagemFoto = BitmapFactory.decodeFile(imagem.get(0).getCaminho());
+            txtAtividade.setText(tarefa.getTitulo());
+
+            if (imagem.getCaminho() != null) {
+                Bitmap imagemFoto = BitmapFactory.decodeFile(imagem.getCaminho());
                 Bitmap imagemFotoReduzida = Bitmap.createScaledBitmap(imagemFoto, imagemFoto.getWidth(), 200, true);
 
 
                 imgAtividade.setImageBitmap(imagemFotoReduzida);
-                imgAtividade.setTag(imagem.get(0).getCaminho());
+                imgAtividade.setTag(imagem.getCaminho());
                 imgAtividade.setScaleType(ImageView.ScaleType.FIT_XY);
 
+            }
+
+            if (audio.getCaminho() != null) {
                 imgAudioAtividade.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                         MediaPlayer mPlayer = new MediaPlayer();
                         try {
-                            mPlayer.setDataSource(audio.get(0).getCaminho());
+                            mPlayer.setDataSource(audio.getCaminho());
                             mPlayer.prepare();
                             mPlayer.start();
                         } catch (IOException e) {
@@ -195,6 +192,7 @@ public class Atividades_activity extends ActionBarActivity {
 
                     }
                 });
+            }
 
 
             //imgAtividade.setImageURI(Uri.fromFile(new File(imagem.get(0).getCaminho())));

@@ -43,9 +43,9 @@ public class CriarRotina_Activity extends ActionBarActivity {
     EditText tituloTarefa;
     TextView tituloRotina;
 
-    long idRotina;
-    long idImagem;
-    long idAudio;
+    long idRotina = -1;
+    long idImagem = -1;
+    long idAudio = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +71,7 @@ public class CriarRotina_Activity extends ActionBarActivity {
         chooseImage = (FloatingActionButton) findViewById(R.id.button_slv_img);
 
 
-        if(savedInstanceState == null) {
+        if (savedInstanceState == null) {
 
             final TextView tituloRotina = (TextView) findViewById(R.id.tituloRotina);
 
@@ -87,8 +87,13 @@ public class CriarRotina_Activity extends ActionBarActivity {
             criarRotina.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    tituloRotina.setText(nomeRotina.getText().toString());
-                    dialog.dismiss();
+                    if (nomeRotina.getText().toString().equals("")) {
+                        Toast.makeText(CriarRotina_Activity.this, "NOME DA ROTINA OBRIGATORIO",
+                                Toast.LENGTH_LONG).show();
+                    } else {
+                        tituloRotina.setText(nomeRotina.getText().toString());
+                        dialog.dismiss();
+                    }
                 }
             });
 
@@ -105,7 +110,6 @@ public class CriarRotina_Activity extends ActionBarActivity {
 
         Button salvarVoltar = (Button) findViewById(R.id.btnSalVol);
         Button salvarNovo = (Button) findViewById(R.id.btnSalNov);
-
 
 
         stop.setOnClickListener(new View.OnClickListener() {
@@ -145,36 +149,49 @@ public class CriarRotina_Activity extends ActionBarActivity {
                 Tarefa tarefa = new Tarefa();
                 Rotina rotina = new Rotina();
 
-                if (path != null) {
-                    imagem.setCaminho(path);
-                    idImagem = dbRotina.insere_imagem(imagem);
-                    path = null;
+
+                if (!tituloTarefa.getText().toString().equals("")) {
+                    if (path != null) {
+                        imagem.setCaminho(path);
+                        idImagem = dbRotina.insere_imagem(imagem);
+                        path = null;
+                    }
+
+                    if (pathAudio != null) {
+                        audio.setCaminho(pathAudio);
+                        idAudio = dbRotina.insere_audio(audio);
+                        pathAudio = null;
+                    }
+
+                    if (contador[0] == 0) {
+                        rotina.setTitulo(tituloRotina.getText().toString());
+                        rotina.setOrdem(1);
+                        idRotina = dbRotina.insere_rotina(rotina);
+                        contador[0] = 1;
+                    }
+
+
+                    if(idImagem != -1) {
+                        tarefa.setIdImagem(idImagem);
+                    }
+                    if (idAudio != -1 ) {
+                        tarefa.setIdAudio(idAudio);
+                    }
+
+                    tarefa.setIdRotina(idRotina);
+                    tarefa.setOrdem(1);
+                    tarefa.setTitulo(tituloTarefa.getText().toString());
+
+                    dbRotina.insere_tarefa(tarefa);
+
+                    dbRotina.close();
+
+                    finish();
+                } else {
+                    Toast.makeText(CriarRotina_Activity.this, "NOME DA TAREFA OBRIGATORIO",
+                            Toast.LENGTH_SHORT).show();
                 }
 
-                if (pathAudio != null) {
-                    audio.setCaminho(pathAudio);
-                    idAudio = dbRotina.insere_audio(audio);
-                    pathAudio = null;
-                }
-
-                if(contador[0] == 0) {
-                    rotina.setTitulo(tituloRotina.getText().toString());
-                    rotina.setOrdem(1);
-                    idRotina = dbRotina.insere_rotina(rotina);
-                    contador[0] = 1;
-                }
-
-                tarefa.setIdImagem(idImagem);
-                tarefa.setIdAudio(idAudio);
-                tarefa.setIdRotina(idRotina);
-                tarefa.setOrdem(1);
-                tarefa.setTitulo(tituloTarefa.getText().toString());
-
-                dbRotina.insere_tarefa(tarefa);
-
-                dbRotina.close();
-
-                finish();
             }
         });
 
@@ -186,43 +203,48 @@ public class CriarRotina_Activity extends ActionBarActivity {
                 Tarefa tarefa = new Tarefa();
                 Rotina rotina = new Rotina();
 
+                if (!tituloTarefa.getText().toString().equals("")) {
+                    if (path != null) {
+                        imagem.setCaminho(path);
+                        idImagem = dbRotina.insere_imagem(imagem);
+                        path = null;
+                    }
 
-                if (path != null) {
-                    imagem.setCaminho(path);
-                    idImagem = dbRotina.insere_imagem(imagem);
-                    path = null;
+                    if (pathAudio != null) {
+                        audio.setCaminho(pathAudio);
+                        idAudio = dbRotina.insere_audio(audio);
+                        pathAudio = null;
+                    }
+
+                    if (contador[0] == 0) {
+                        rotina.setTitulo(tituloRotina.getText().toString());
+                        rotina.setOrdem(1);
+                        idRotina = dbRotina.insere_rotina(rotina);
+                        contador[0] = 1;
+                    }
+
+                    tarefa.setIdImagem(idImagem);
+                    tarefa.setIdAudio(idAudio);
+                    tarefa.setIdRotina(idRotina);
+                    tarefa.setOrdem(1);
+                    tarefa.setTitulo(tituloTarefa.getText().toString());
+
+                    dbRotina.insere_tarefa(tarefa);
+
+
+                    dbRotina.close();
+                    tituloTarefa.setText("");
+                    viewImage.setImageResource(R.drawable.ic_no_image);
+                } else{
+                    Toast.makeText(CriarRotina_Activity.this, "NOME DA TAREFA OBRIGATORIO",
+                            Toast.LENGTH_SHORT).show();
                 }
 
-                if (pathAudio != null) {
-                    audio.setCaminho(pathAudio);
-                    idAudio = dbRotina.insere_audio(audio);
-                    pathAudio = null;
-                }
-
-                if(contador[0] == 0) {
-                    rotina.setTitulo(tituloRotina.getText().toString());
-                    rotina.setOrdem(1);
-                    idRotina = dbRotina.insere_rotina(rotina);
-                    contador[0] = 1;
-                }
-
-                tarefa.setIdImagem(idImagem);
-                tarefa.setIdAudio(idAudio);
-                tarefa.setIdRotina(idRotina);
-                tarefa.setOrdem(1);
-                tarefa.setTitulo(tituloTarefa.getText().toString());
-
-                dbRotina.insere_tarefa(tarefa);
-
-
-
-                dbRotina.close();
-                tituloTarefa.setText("");
-                viewImage.setImageResource(R.drawable.ic_no_image);
             }
         });
-
     }
+
+
 
     private void selectImage() {
 
