@@ -7,7 +7,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/icone"
+        android:icon="@drawable/ic_logo_semfundo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
@@ -48,6 +48,11 @@
         </activity>
         <activity
             android:name=".EditarTarefa_Activity"
+            android:label="Tarefa"
+            android:screenOrientation="portrait"  >
+        </activity>
+        <activity
+            android:name=".EditarTarefa_Activity2"
             android:label="Tarefa"
             android:screenOrientation="portrait"  >
         </activity>

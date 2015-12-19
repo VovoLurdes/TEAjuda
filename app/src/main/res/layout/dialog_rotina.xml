@@ -27,29 +27,25 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Criar Rotina"
-        android:id="@+id/btnCriar"
-        android:layout_gravity="center_horizontal"
+        android:text="Cancelar"
+        android:id="@+id/btnCancelar"
         android:layout_weight="80"
         android:layout_marginLeft="2dp"
         android:background="#ffffff" />
 
-    <View
-        android:layout_width="1dip"
-        android:layout_height="40dp"
-        android:background="#A8A8A8"
-        android:layout_weight="1"
-        android:layout_marginTop="5dp"
-        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cancelar"
-        android:id="@+id/btnCancelar"
+        android:text="Confirma"
+        android:id="@+id/btnCriar"
+        android:layout_gravity="center_horizontal"
         android:layout_weight="80"
         android:layout_marginRight="2dp"
         android:background="#ffffff" />
+
+
+
 </LinearLayout>
 
 </LinearLayout>

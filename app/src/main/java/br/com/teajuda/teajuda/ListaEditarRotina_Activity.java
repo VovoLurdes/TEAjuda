@@ -1,6 +1,7 @@
 package br.com.teajuda.teajuda;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,12 +10,19 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import br.com.teajuda.teajuda.Classes.Audio;
+import br.com.teajuda.teajuda.Classes.Imagem;
 import br.com.teajuda.teajuda.Classes.ListaRotinaAdapter;
 import br.com.teajuda.teajuda.Classes.Rotina;
+import br.com.teajuda.teajuda.Classes.Tarefa;
 import br.com.teajuda.teajuda.Conexao.RotinaDao;
 
 public class ListaEditarRotina_Activity extends ActionBarActivity{
@@ -63,6 +71,7 @@ public class ListaEditarRotina_Activity extends ActionBarActivity{
 
 
         MenuItem deletar = menu.add("Deletar");
+        MenuItem alterar = menu.add("Alterar");
 
         deletar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -72,16 +81,78 @@ public class ListaEditarRotina_Activity extends ActionBarActivity{
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle("Deletar")
                         .setMessage("Deseja mesmo deletar? ")
-                        .setPositiveButton("Quero",
+                        .setPositiveButton("Sim",
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         RotinaDao dao = new RotinaDao(ListaEditarRotina_Activity.this);
+
+                                        List<Tarefa> tarefa = new ArrayList<Tarefa>();
+                                        Imagem imagem = new Imagem();
+                                        Audio audio = new Audio();
+
+                                        tarefa = dao.getListaTarefa(rotinaSelecionado.getId());
+
+                                        for (int i = 0; i < tarefa.size(); i++) {
+                                            imagem = dao.getImage(tarefa.get(i).getIdImagem());
+                                            audio = dao.getAudio(tarefa.get(i).getIdAudio());
+
+                                            if (imagem.getId() != null) {
+                                                dao.deletar_imagem(imagem);
+                                            }
+                                            if (audio.getId() != null) {
+                                                dao.deletar_audio(audio);
+                                            }
+                                            dao.deletar_tarefa(tarefa.get(i));
+                                        }
+
                                         dao.deletar_rotina(rotinaSelecionado);
                                         carregaLista();
                                         dao.close();
                                     }
-                                }).setNegativeButton("Não",null).show();
+                                }).setNegativeButton("Não", null).show();
+                return false;
+            }
+        });
+
+        alterar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                final Dialog dialog = new Dialog(ListaEditarRotina_Activity.this);
+                dialog.setTitle("Alterar Nome Rotina");
+                dialog.setContentView(R.layout.dialog_rotina);
+                dialog.setCancelable(false);
+
+                Button criarRotina = (Button) dialog.findViewById(R.id.btnCriar);
+                Button cancelarRotina = (Button) dialog.findViewById(R.id.btnCancelar);
+                final EditText nomeRotina = (EditText) dialog.findViewById(R.id.edtNomeRotina);
+
+                criarRotina.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (nomeRotina.getText().toString().equals("")) {
+                            Toast.makeText(ListaEditarRotina_Activity.this, "NOME DA ROTINA OBRIGATORIO",
+                                    Toast.LENGTH_LONG).show();
+                        } else {
+                            RotinaDao dao = new RotinaDao(ListaEditarRotina_Activity.this);
+                            rotinaSelecionado.setTitulo(nomeRotina.getText().toString());
+                            dao.alterarRotina(rotinaSelecionado);
+                            dialog.dismiss();
+                        }
+                    }
+                });
+
+                cancelarRotina.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                });
+
+                dialog.show();
+
+
                 return false;
             }
         });

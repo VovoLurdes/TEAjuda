@@ -18,10 +18,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.io.File;
 
@@ -46,6 +48,7 @@ public class CriarRotina_Activity extends ActionBarActivity {
     long idRotina = -1;
     long idImagem = -1;
     long idAudio = -1;
+    long controleRecord=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +56,6 @@ public class CriarRotina_Activity extends ActionBarActivity {
         setContentView(R.layout.activity_criar_rotina);
 
         final int[] contador = {0};
-
-//        mFileName = Environt.getExternalStorageDirectory().getAbsolutePath();
-//        mFileName += "/audiorecordtest.3gp";
-
-        final FloatingActionButton gravar = (FloatingActionButton) findViewById(R.id.button_play);
-        final FloatingActionButton stop = (FloatingActionButton) findViewById(R.id.button_stop);
-
-        stop.setVisibility(View.INVISIBLE);
 
         tituloRotina = (TextView) findViewById(R.id.tituloRotina);
         tituloTarefa = (EditText) findViewById(R.id.edtTituloTarefa);
@@ -71,20 +66,18 @@ public class CriarRotina_Activity extends ActionBarActivity {
         chooseImage = (FloatingActionButton) findViewById(R.id.button_slv_img);
 
 
-        if (savedInstanceState == null) {
+        final TextView tituloRotina = (TextView) findViewById(R.id.tituloRotina);
 
-            final TextView tituloRotina = (TextView) findViewById(R.id.tituloRotina);
+        final Dialog dialog = new Dialog(this);
+        dialog.setTitle("Criar Rotina");
+        dialog.setContentView(R.layout.dialog_rotina);
+        dialog.setCancelable(false);
 
-            final Dialog dialog = new Dialog(this);
-            dialog.setTitle("Criar Rotina");
-            dialog.setContentView(R.layout.dialog_rotina);
-            dialog.setCancelable(false);
+        Button criarRotina = (Button) dialog.findViewById(R.id.btnCriar);
+        Button cancelarRotina = (Button) dialog.findViewById(R.id.btnCancelar);
+        final EditText nomeRotina = (EditText) dialog.findViewById(R.id.edtNomeRotina);
 
-            Button criarRotina = (Button) dialog.findViewById(R.id.btnCriar);
-            Button cancelarRotina = (Button) dialog.findViewById(R.id.btnCancelar);
-            final EditText nomeRotina = (EditText) dialog.findViewById(R.id.edtNomeRotina);
-
-            criarRotina.setOnClickListener(new View.OnClickListener() {
+        criarRotina.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (nomeRotina.getText().toString().equals("")) {
@@ -106,33 +99,28 @@ public class CriarRotina_Activity extends ActionBarActivity {
             });
 
             dialog.show();
-        }
+
+        final ToggleButton btn_toggle_gravar = (ToggleButton) findViewById(R.id.btn_toggle_gravar);
+
+        btn_toggle_gravar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    voice = new AudioRecord();
+                    voice.startRecording();
+                    Toast.makeText(CriarRotina_Activity.this, "Gravando", Toast.LENGTH_SHORT).show();
+                    controleRecord = 1;
+                } else {
+                    pathAudio = voice.stopRecording();
+                    Toast.makeText(CriarRotina_Activity.this, "Audio Gravado", Toast.LENGTH_SHORT).show();
+                    controleRecord = 0;
+                }
+            }
+        });
+
 
         Button salvarVoltar = (Button) findViewById(R.id.btnSalVol);
         Button salvarNovo = (Button) findViewById(R.id.btnSalNov);
-
-
-        stop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                pathAudio = voice.stopRecording();
-                Toast.makeText(CriarRotina_Activity.this, "Audio Gravado", Toast.LENGTH_SHORT).show();
-                stop.setVisibility(View.INVISIBLE);
-                gravar.setVisibility(View.VISIBLE);
-            }
-        });
-
-        gravar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                voice = new AudioRecord();
-                voice.startRecording();
-                Toast.makeText(CriarRotina_Activity.this, "Gravando", Toast.LENGTH_SHORT).show();
-                stop.setVisibility(View.VISIBLE);
-                gravar.setVisibility(View.INVISIBLE);
-            }
-        });
 
         chooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,6 +137,9 @@ public class CriarRotina_Activity extends ActionBarActivity {
                 Tarefa tarefa = new Tarefa();
                 Rotina rotina = new Rotina();
 
+                if(controleRecord==1){
+                    btn_toggle_gravar.setChecked(false);
+                }
 
                 if (!tituloTarefa.getText().toString().equals("")) {
                     if (path != null) {
@@ -173,9 +164,11 @@ public class CriarRotina_Activity extends ActionBarActivity {
 
                     if(idImagem != -1) {
                         tarefa.setIdImagem(idImagem);
+                        idImagem = -1;
                     }
                     if (idAudio != -1 ) {
                         tarefa.setIdAudio(idAudio);
+                        idAudio = -1;
                     }
 
                     tarefa.setIdRotina(idRotina);
@@ -185,6 +178,8 @@ public class CriarRotina_Activity extends ActionBarActivity {
                     dbRotina.insere_tarefa(tarefa);
 
                     dbRotina.close();
+
+
 
                     finish();
                 } else {
@@ -202,6 +197,10 @@ public class CriarRotina_Activity extends ActionBarActivity {
                 Audio audio = new Audio();
                 Tarefa tarefa = new Tarefa();
                 Rotina rotina = new Rotina();
+
+                if(controleRecord==1){
+                    btn_toggle_gravar.setChecked(false);
+                }
 
                 if (!tituloTarefa.getText().toString().equals("")) {
                     if (path != null) {
@@ -223,8 +222,15 @@ public class CriarRotina_Activity extends ActionBarActivity {
                         contador[0] = 1;
                     }
 
-                    tarefa.setIdImagem(idImagem);
-                    tarefa.setIdAudio(idAudio);
+                    if(idImagem != -1) {
+                        tarefa.setIdImagem(idImagem);
+                        idImagem = -1;
+                    }
+                    if (idAudio != -1 ) {
+                        tarefa.setIdAudio(idAudio);
+                        idAudio = -1;
+                    }
+
                     tarefa.setIdRotina(idRotina);
                     tarefa.setOrdem(1);
                     tarefa.setTitulo(tituloTarefa.getText().toString());
@@ -235,7 +241,8 @@ public class CriarRotina_Activity extends ActionBarActivity {
                     dbRotina.close();
                     tituloTarefa.setText("");
                     viewImage.setImageResource(R.drawable.ic_no_image);
-                } else{
+
+                } else {
                     Toast.makeText(CriarRotina_Activity.this, "NOME DA TAREFA OBRIGATORIO",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -330,10 +337,7 @@ public class CriarRotina_Activity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }

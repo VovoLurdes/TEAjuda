@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 
 import java.io.IOException;
 import java.util.List;
@@ -64,6 +66,7 @@ public class Atividades_activity extends ActionBarActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -86,10 +89,7 @@ public class Atividades_activity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -127,7 +127,7 @@ public class Atividades_activity extends ActionBarActivity {
         private Imagem imagem = null;
         private Audio audio;
         private Context context;
-
+        private Rotina rotina;
 
         public static PlaceholderFragment getNewInstance(Tarefa tarefa, Context context) {
             PlaceholderFragment instance = new PlaceholderFragment();
@@ -154,45 +154,58 @@ public class Atividades_activity extends ActionBarActivity {
             ImageView imgAtividade = (ImageView) rootView.findViewById(R.id.imgAtividade);
             ImageView imgAudioAtividade = (ImageView) rootView.findViewById(R.id.imgAudioAtividade);
             TextView  txtAtividade = (TextView) rootView.findViewById(R.id.txtAtividade);
+            TextView txtRotina     = (TextView) rootView.findViewById(R.id.txtRotina);
 
             RotinaDao dao = new RotinaDao(context);
 
             imagem = dao.getImage(tarefa.getIdImagem());
             audio = dao.getAudio(tarefa.getIdAudio());
+            rotina = dao.getRotina(tarefa.getIdRotina());
 
             dao.close();
 
             txtAtividade.setText(tarefa.getTitulo());
+            txtRotina.setText(rotina.getTitulo());
 
-            if (imagem.getCaminho() != null) {
-                Bitmap imagemFoto = BitmapFactory.decodeFile(imagem.getCaminho());
-                Bitmap imagemFotoReduzida = Bitmap.createScaledBitmap(imagemFoto, imagemFoto.getWidth(), 200, true);
+            try {
+                if (imagem.getCaminho() != null) {
+                    Bitmap imagemFoto = BitmapFactory.decodeFile(imagem.getCaminho());
+                    Bitmap imagemFotoReduzida = Bitmap.createScaledBitmap(imagemFoto, imagemFoto.getWidth(), 200, true);
 
 
-                imgAtividade.setImageBitmap(imagemFotoReduzida);
-                imgAtividade.setTag(imagem.getCaminho());
-                imgAtividade.setScaleType(ImageView.ScaleType.FIT_XY);
+                    imgAtividade.setImageBitmap(imagemFotoReduzida);
+                    imgAtividade.setTag(imagem.getCaminho());
+                    imgAtividade.setScaleType(ImageView.ScaleType.FIT_XY);
 
+                }
+            }catch (Exception e){
+                Toast.makeText(context, "VERIFIQUE SE A IMAGEM NÃO FOI DELETADA", Toast.LENGTH_SHORT).show();
             }
 
-            if (audio.getCaminho() != null) {
-                imgAudioAtividade.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
 
-                        MediaPlayer mPlayer = new MediaPlayer();
-                        try {
-                            mPlayer.setDataSource(audio.getCaminho());
-                            mPlayer.prepare();
-                            mPlayer.start();
-                        } catch (IOException e) {
-                            Log.e("LOG", "prepare() failed");
+
+                    imgAudioAtividade.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (audio.getCaminho() != null) {
+                                MediaPlayer mPlayer = new MediaPlayer();
+                                try {
+                                    mPlayer.setDataSource(audio.getCaminho());
+                                    mPlayer.prepare();
+                                    mPlayer.start();
+                                } catch (IOException e) {
+                                    Log.e("LOG", "prepare() failed");
+                                    Toast.makeText(context, "VERIFIQUE SE O AUDIO NÃO FOI DELETADO", Toast.LENGTH_SHORT).show();
+                                }
+                            }else{
+                                Toast.makeText(context, "SEM AUDIO GRAVADO!", Toast.LENGTH_SHORT).show();
+                            }
+
+
                         }
+                    });
 
 
-                    }
-                });
-            }
 
 
             //imgAtividade.setImageURI(Uri.fromFile(new File(imagem.get(0).getCaminho())));

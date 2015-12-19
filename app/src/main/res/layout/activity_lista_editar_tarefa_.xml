@@ -1,9 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_height="match_parent" 
     tools:context="br.com.teajuda.teajuda.MinhasRotinas_Activity"
     android:background="@drawable/fundo2">
 
@@ -11,5 +8,19 @@
         android:id="@+id/lista_rotina"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_height="60dp"
+            android:layout_width="60dp"
+            android:elevation="5dp"
+            android:gravity="center"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:src="@drawable/acrescentar"
+            android:id="@+id/btnCriarTarefa"
+            android:textColor="#FFFFFF"
+            android:textSize="40sp"
+            android:clickable="true" />
 
 </RelativeLayout>

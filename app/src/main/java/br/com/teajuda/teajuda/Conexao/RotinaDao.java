@@ -191,6 +191,23 @@ public class RotinaDao extends SQLiteOpenHelper {
         return imagem;
     }
 
+    public Rotina getRotina(Long id){
+        Rotina rotina = new Rotina();
+
+        String sql = "SELECT * FROM " + TB_ROTINA + " WHERE idRotina = " + id + ";";
+
+        Cursor c = getReadableDatabase().rawQuery(sql, null);
+
+        while (c.moveToNext()) {
+            rotina.setId(c.getLong(c.getColumnIndex("idRotina")));
+            rotina.setTitulo(c.getString(c.getColumnIndex("DescricaoRotina")));
+
+        }
+
+        c.close();
+        return rotina;
+    }
+
 
     public Audio getAudio(Long id){
         Audio audio = new Audio();
@@ -248,6 +265,15 @@ public class RotinaDao extends SQLiteOpenHelper {
     }
 
 
+    public void alterarRotina (Rotina rotina){
+        ContentValues values = new ContentValues();
+
+        values.put("DescricaoRotina", rotina.getTitulo());
+
+        String[] idParaSerAlterado = {rotina.getId().toString()};
+
+        getWritableDatabase().update(TB_ROTINA, values, "idRotina=?", idParaSerAlterado);
+    }
     
     public void alteraTarefa (Tarefa tarefa){
         ContentValues values = new ContentValues();

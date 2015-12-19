@@ -49,4 +49,5 @@ public class ListaRotinaAdapter extends BaseAdapter{
         return view;
     }
 
+
 }

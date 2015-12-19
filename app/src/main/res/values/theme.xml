@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ButtonToggleView" parent="android:Widget.Button.Toggle">
+        <item name="android:layout_width">32dp</item>
+        <item name="android:layout_height">32dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:background">@drawable/toggle</item>
+        <item name="android:disabledAlpha">?android:attr/disabledAlpha</item>
+    </style>
+</resources>

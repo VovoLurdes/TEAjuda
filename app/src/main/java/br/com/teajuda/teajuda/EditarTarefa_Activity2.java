@@ -12,7 +12,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,12 +27,15 @@ import java.io.File;
 import br.com.teajuda.teajuda.Classes.Audio;
 import br.com.teajuda.teajuda.Classes.AudioRecord;
 import br.com.teajuda.teajuda.Classes.Imagem;
+import br.com.teajuda.teajuda.Classes.Rotina;
 import br.com.teajuda.teajuda.Classes.Tarefa;
 import br.com.teajuda.teajuda.Conexao.RotinaDao;
 
-public class EditarTarefa_Activity extends ActionBarActivity{
+public class EditarTarefa_Activity2 extends ActionBarActivity{
 
+    private Rotina rotina;
     private Tarefa tarefa;
+
     AudioRecord voice;
     ImageView viewImage;
     FloatingActionButton chooseImage;
@@ -51,7 +53,7 @@ public class EditarTarefa_Activity extends ActionBarActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_editar_tarefa_);
+        setContentView(R.layout.activity_editar_tarefa_2);
 
 
         viewImage = (ImageView) findViewById(R.id.imagemTarefa);
@@ -59,7 +61,7 @@ public class EditarTarefa_Activity extends ActionBarActivity{
         tituloTarefa = (EditText) findViewById(R.id.edtTituloTarefa);
 
         Intent edicao = this.getIntent();
-        tarefa = (Tarefa) edicao.getSerializableExtra("tarefaselecionada");
+        rotina = (Rotina) edicao.getSerializableExtra("rotinaSelecionada");
 
         ToggleButton btn_toggle_gravar = (ToggleButton) findViewById(R.id.btn_toggle_gravar);
 
@@ -69,38 +71,15 @@ public class EditarTarefa_Activity extends ActionBarActivity{
                 if (isChecked) {
                     voice = new AudioRecord();
                     voice.startRecording();
-                    Toast.makeText(EditarTarefa_Activity.this, "Gravando", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditarTarefa_Activity2.this, "Gravando", Toast.LENGTH_SHORT).show();
                 } else {
                     pathAudio = voice.stopRecording();
-                    Toast.makeText(EditarTarefa_Activity.this, "Audio Gravado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditarTarefa_Activity2.this, "Audio Gravado", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        RotinaDao dbRotina = new RotinaDao(this);
 
-        tarefa = dbRotina.getTarefa(tarefa.getId());
-
-        imagem = dbRotina.getImage(tarefa.getIdImagem());
-        audio = dbRotina.getAudio(tarefa.getIdAudio());
-
-        try {
-            if (imagem.getCaminho() != null) {
-                Bitmap imagemFoto = BitmapFactory.decodeFile(imagem.getCaminho());
-                Bitmap imagemFotoReduzida = Bitmap.createScaledBitmap(imagemFoto, imagemFoto.getWidth(), 300, true);
-
-                viewImage.setImageBitmap(imagemFotoReduzida);
-                viewImage.setTag(imagem.getCaminho());
-                viewImage.setScaleType(ImageView.ScaleType.FIT_XY);
-
-            }
-        }catch (Exception e)
-        {
-            viewImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_no_image));
-        }
-
-        tituloTarefa.setText(tarefa.getTitulo());
-        dbRotina.close();
         chooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,18 +90,10 @@ public class EditarTarefa_Activity extends ActionBarActivity{
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.i("Maroto", "Form onResume");
-
-    }
-
-
     private void selectImage() {
 
         final CharSequence[] options = { "Tirar Foto", "Foto da Galeria","Cancelar" };
-        AlertDialog.Builder builder = new AlertDialog.Builder(EditarTarefa_Activity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditarTarefa_Activity2.this);
         builder.setTitle("Adicionar Foto");
 
         builder.setItems(options, new DialogInterface.OnClickListener() {
@@ -139,7 +110,7 @@ public class EditarTarefa_Activity extends ActionBarActivity{
                     irParaCamera.putExtra(MediaStore.EXTRA_OUTPUT, localFoto);
                     startActivityForResult(irParaCamera, 1);
                 } else if (options[item].equals("Foto da Galeria")) {
-                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, 2);
                 } else if (options[item].equals("Cancelar")) {
                     dialog.dismiss();
@@ -200,36 +171,45 @@ public class EditarTarefa_Activity extends ActionBarActivity{
 
                 RotinaDao dbRotina = new RotinaDao(this);
 
-                if (path != null) {
-                    imagem.setCaminho(path);
-                    if (tarefa.getIdImagem() != 0) {
-                            dbRotina.alteraImagem(imagem);
-                        }else {
-                          idImagem = dbRotina.insere_imagem(imagem);
-                          tarefa.setIdImagem(idImagem);
+                Imagem imagem = new Imagem();
+                Audio audio = new Audio();
+
+                tarefa = new Tarefa();
+
+                if (!tituloTarefa.getText().toString().equals("")) {
+                    if (path != null) {
+                        imagem.setCaminho(path);
+                        idImagem = dbRotina.insere_imagem(imagem);
+                        path = null;
                     }
 
-                    path = null;
-                }
-
-                if (pathAudio != null) {
-                    audio.setCaminho(pathAudio);
-                    if (tarefa.getIdAudio() != 0) {
-                        dbRotina.alteraAudio(audio);
-                    }else{
+                    if (pathAudio != null) {
+                        audio.setCaminho(pathAudio);
                         idAudio = dbRotina.insere_audio(audio);
+                        pathAudio = null;
+                    }
+
+
+                    if(idImagem != -1) {
+                        tarefa.setIdImagem(idImagem);
+                    }
+                    if (idAudio != -1 ) {
                         tarefa.setIdAudio(idAudio);
                     }
-                    pathAudio = null;
+
+                    tarefa.setIdRotina(rotina.getId());
+                    tarefa.setOrdem(1);
+                    tarefa.setTitulo(tituloTarefa.getText().toString());
+
+                    dbRotina.insere_tarefa(tarefa);
+
+                    dbRotina.close();
+
+                    finish();
+                } else {
+                    Toast.makeText(EditarTarefa_Activity2.this, "NOME DA TAREFA OBRIGATORIO",
+                            Toast.LENGTH_SHORT).show();
                 }
-
-                tarefa.setTitulo(tituloTarefa.getText().toString());
-
-                dbRotina.alteraTarefa(tarefa);
-
-                dbRotina.close();
-
-                finish();
                 return false;
             default:
                 return super.onOptionsItemSelected(item);

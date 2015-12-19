@@ -12,7 +12,8 @@
         android:textSize="40dp"
         android:textAlignment="center"
         android:id="@+id/tituloRotina"
-        android:gravity="left" />
+        android:gravity="left"
+        android:textColor="#000000" />
 
 
 <LinearLayout
@@ -78,56 +79,44 @@
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="1"
         android:layout_margin="5dp"
         card_view:cardCornerRadius="0dp"
         card_view:cardUseCompatPadding="false"
         card_view:cardBackgroundColor="@android:color/transparent">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
             android:alpha="80">
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/edtTituloTarefa"
-                android:layout_gravity="center_horizontal"
                 android:hint="TAREFA"
-                android:layout_margin="10dp"/>
+                android:textSize="15dp"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/btn_toggle_gravar"
+                android:layout_toLeftOf="@+id/btn_toggle_gravar" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <ToggleButton
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:text=""
+                android:textOff=""
+                android:textOn=""
+                android:id="@+id/btn_toggle_gravar"
+                android:background="@drawable/toggle"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/edtTituloTarefa"
+                android:layout_alignBottom="@+id/edtTituloTarefa" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2" />
+        </RelativeLayout>
 
-                 <android.support.design.widget.FloatingActionButton
-                    android:layout_height="60dp"
-                    android:layout_width="60dp"
-                    android:id="@+id/button_play"
-                    android:src="@drawable/gravar"
-                    android:layout_marginRight="10dp"
-                     android:layout_weight="1"
-                     />
-
-                <android.support.design.widget.FloatingActionButton
-                    android:layout_height="60dp"
-                    android:layout_width="60dp"
-                    android:layout_gravity="center"
-                    android:id="@+id/button_stop"
-                    android:src="@drawable/stop"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
 
     </android.support.v7.widget.CardView>
 
@@ -144,7 +133,7 @@
         android:id="@+id/btnSalVol"
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
-        android:background="#293a4044"
+        android:background="#fafdffff"
         android:layout_marginRight="2dp"/>
 
     <Button
@@ -154,7 +143,7 @@
         android:id="@+id/btnSalNov"
         android:layout_gravity="center_vertical"
         android:layout_weight="1"
-        android:background="#293a4044" />
+        android:background="#fafdffff" />
 
         </LinearLayout>
 
